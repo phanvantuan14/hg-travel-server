@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.get("/", (req, res) => {
-    res.send("<h1>Chào tất cả các bạn đến với api vinhtravel!</h1>");
+    res.send("<h1>Backend is running</h1>");
 }
 )
 app.post("/payment", async (req, res) => {
@@ -30,6 +30,7 @@ require("./routes/user")(app);
 require("./routes/Tag")(app);
 require("./routes/Quocgia")(app);
 require("./routes/Tintuc")(app);
+require('./routes/Hotel')(app);
 require("./routes/Tour")(app);
 require("./routes/Ngaydi")(app);
 require("./routes/Loaitour")(app);
@@ -62,4 +63,4 @@ require("./routes/SendEmail")(app);
 app.use(function (err, req, res, next) {
     res.status(500).send(err)
 })
-app.listen(process.env.PORT || 666, () => { console.log("Chào mừng bạn đến với Backend"); })
+app.listen(process.env.PORT || 666, () => { console.log("Backend is running....."); })

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Anh.belongsTo(models.Tour)
+      Anh.belongsTo(models.Hotel)
     }
   };
   Anh.init({
@@ -22,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: "Tour",
+        key: "id"
+      }
+    },
+    hotelId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Hotel",
         key: "id"
       }
     }

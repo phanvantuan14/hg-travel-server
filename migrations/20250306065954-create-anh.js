@@ -23,10 +23,20 @@ module.exports = {
       tourId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Tours",
-          key: "id"
+          model: 'Tours', // Chú ý: tên bảng phải là số nhiều
+          key: 'id'
         },
-        onDelete: "CASCADE"
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      hotelId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Hotels', // Chú ý: tên bảng phải là số nhiều
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -41,4 +51,4 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Anhs');
   }
-};
+};``

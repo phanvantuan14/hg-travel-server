@@ -1,13 +1,17 @@
-
 module.exports = app => {
-    var anh = require('../controller/Anh');
-    var router = require('express').Router();
+    const Anh = require('../controller/Anh');
+    const router = require('express').Router();
 
-    router.post("/", anh.create);
-    router.get('/', anh.findall);
-    router.get('/:id', anh.findone);
-    router.delete('/:id', anh.delete);
-    router.patch('/:id', anh.update);
+    // Routes cơ bản
+    router.get('/', Anh.findall);
+    router.get('/:id', Anh.findone);
+    router.post('/', Anh.create);
+    router.patch('/:id', Anh.update);
+    
+    // Routes cho tour và hotel
+    router.delete('/:type/:id', Anh.delete);  // type: 'tour' hoặc 'hotel'
+    router.get('/tour/:tourId', Anh.findByTour);
+    router.get('/hotel/:hotelId', Anh.findByHotel);
 
-    app.use("/anhs", router);
+    app.use('/anhs', router);
 }

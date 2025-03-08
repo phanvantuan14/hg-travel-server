@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Tours', {
+    await queryInterface.createTable('Hotels', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,25 +11,25 @@ module.exports = {
       name: {
         type: Sequelize.STRING(500)
       },
+      diachi: {
+        type: Sequelize.STRING(500)
+      },
+      sdt: {
+        type: Sequelize.STRING(500)
+      },
+      email: {
+        type: Sequelize.STRING(500)
+      },
+      giaphong: {
+        type: Sequelize.INTEGER
+      },
       avatar: {
         type: Sequelize.STRING(5000)
       },
       tenanh: {
         type: Sequelize.STRING(1000)
       },
-      gianguoilon: {
-        type: Sequelize.INTEGER
-      },
-      giatreem: {
-        type: Sequelize.INTEGER
-      },
-      giaembe: {
-        type: Sequelize.INTEGER
-      },
-      trailer: {
-        type: Sequelize.STRING
-      },
-      chitiettour: {
+      chitiethotel: {
         type: Sequelize.TEXT
       },
       luuy: {
@@ -41,8 +41,12 @@ module.exports = {
       bando: {
         type: Sequelize.STRING(5000)
       },
-      status: {
+      thoigian: {
         type: Sequelize.INTEGER
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
@@ -55,6 +59,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Tours');
+    await queryInterface.dropTable('Hotels');
   }
 };
