@@ -1,13 +1,31 @@
 var Hoadon = require('../models').Hoadon;
 var Tour = require("../models").Tour;
 var User = require("../models").User;
-exports.create = (req, res) => {
-    Hoadon.create(req.body).then(data => {
-        res.json({ data: data })
-    }).catch(er => {
-        throw er;
-    })
-}
+exports.create = async (req, res) => {
+    try {
+        const hoadon = await Hoadon.create(req.body);
+        // Lấy thêm thông tin tour và user
+        const hoadonWithDetails = await Hoadon.findOne({
+            where: { id: hoadon.id },
+            include: [
+                { 
+                    model: Tour, 
+                    attributes: ["id", "gianguoilon", "giatreem", "giaembe", "name"] 
+                },
+                { 
+                    model: User, 
+                    attributes: ["id", "name"] 
+                }
+            ]
+        });
+        res.json({ data: hoadonWithDetails });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+};
 exports.findall = (req, res) => {
     Hoadon.findAll({ order: [["id", "DESC"]], include: [{ model: Tour, attributes: ["id", "gianguoilon", "giatreem", "giaembe", "name", "thoigian", "avatar", "status"] }, { model: User, attributes: ["id", "name"] }] }).then(data => {
         res.json({ data: data })

@@ -38,7 +38,10 @@ module.exports = (sequelize, DataTypes) => {
     embe: DataTypes.INTEGER,
     ngaydi: DataTypes.STRING,
     thanhtien: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    status: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0 
+  }
   }, {
     sequelize,
     modelName: 'Hoadon',
