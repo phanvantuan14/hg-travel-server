@@ -1,30 +1,37 @@
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
 require('dotenv').config();
-exports.sendEmail = async (req, res) => {
-    const log = console.log;
-    const data = req.body;
-    // Step 1
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL || 'abc@gmail.com', // TODO: your gmail account
-            pass: process.env.PASSWORDEMAIL || '1234' // TODO: your gmail password
-        }
-    });
 
-    // Step 2
-    let mailOptions = {
-        from: 'vankienars98@gmail.com', // TODO: email receiver
-        to: data.email, // TODO: email sender
-        subject: 'Đăng ký tour thành công!',
-        text: 'Chúc đã đặt tour thành công tour ' + data.tentour + ' với giá ' + data.thanhtien + 'vnđ Xin chúc mừng bạn !',
-    };
-
-    // Step 3
-    transporter.sendMail(mailOptions, (err, data) => {
-        if (err) {
-            return log('Error occurs', err);
+// Chỉ export hàm sendEmail, bỏ API endpoint test
+exports.sendEmail = async (toEmail, subject, htmlContent) => {
+    try {
+        if (!toEmail) {
+            throw new Error("Email người nhận không được để trống");
         }
-        return log('Email sent!!!');
-    });
-}
+
+        console.log("Sending notification to hotel email:", toEmail);
+
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORDEMAIL
+            }
+        });
+
+        let mailOptions = {
+            from: `"Website Du Lịch" <${process.env.EMAIL}>`,
+            to: toEmail,
+            subject: subject,
+            html: htmlContent
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully to hotel:', toEmail);
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error("Error sending email:", error);
+        return { success: false, error: error.message };
+    }
+};

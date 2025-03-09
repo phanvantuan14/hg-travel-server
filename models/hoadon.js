@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     treem: DataTypes.INTEGER,
     embe: DataTypes.INTEGER,
     ngaydi: DataTypes.STRING,
-    thanhtien: DataTypes.INTEGER
+    thanhtien: DataTypes.INTEGER,
+    status: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Hoadon',

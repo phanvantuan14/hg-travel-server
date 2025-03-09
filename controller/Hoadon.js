@@ -9,7 +9,7 @@ exports.create = (req, res) => {
     })
 }
 exports.findall = (req, res) => {
-    Hoadon.findAll({ order: [["id", "DESC"]], include: [{ model: Tour, attributes: ["id", "gianguoilon", "giatreem", "giaembe", "name", "thoigian", "avatar"] }, { model: User, attributes: ["id", "name"] }] }).then(data => {
+    Hoadon.findAll({ order: [["id", "DESC"]], include: [{ model: Tour, attributes: ["id", "gianguoilon", "giatreem", "giaembe", "name", "thoigian", "avatar", "status"] }, { model: User, attributes: ["id", "name"] }] }).then(data => {
         res.json({ data: data })
     }).catch(er => {
         throw er;

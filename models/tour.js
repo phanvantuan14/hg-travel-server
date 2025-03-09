@@ -54,7 +54,8 @@ module.exports = (sequelize, DataTypes) => {
     bando: DataTypes.STRING(5000),
     status: DataTypes.INTEGER,
     songuoi: DataTypes.INTEGER,
-    thoigian: DataTypes.INTEGER
+    thoigian: DataTypes.INTEGER,
+    noikhoihang: DataTypes.STRING(5000)
   }, {
     sequelize,
     modelName: 'Tour',

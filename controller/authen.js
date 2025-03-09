@@ -10,7 +10,7 @@ function authen(req, res, next) {
                     message: 'token loi roi'
                 })
             } else {
-                console.log(user);
+                // console.log(user);
                 return next();
             }
         })
