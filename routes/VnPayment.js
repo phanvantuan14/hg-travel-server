@@ -32,7 +32,6 @@ module.exports = (app) => {
                 req.socket.remoteAddress ||
                 req.connection.socket.remoteAddress;
 
-            // Sử dụng process.env thay vì config.get
             const tmnCode = process.env.VNP_TMN_CODE;
             const secretKey = process.env.VNP_HASH_SECRET;
             const vnpUrl = process.env.VNP_URL;
@@ -47,7 +46,6 @@ module.exports = (app) => {
             const orderType = req.body.orderType || "other";
             const locale = req.body.language || "vn";
 
-            // Tạo params ban đầu
             let vnp_Params = {
                 vnp_Version: "2.1.0",
                 vnp_Command: "pay",
@@ -74,10 +72,8 @@ module.exports = (app) => {
                 .update(Buffer.from(signData, "utf-8"))
                 .digest("hex");
 
-            // Thêm chữ ký vào params
             vnp_Params["vnp_SecureHash"] = signed;
 
-            // Tạo URL thanh toán
             const finalUrl =
                 vnpUrl +
                 "?" +
@@ -96,8 +92,8 @@ module.exports = (app) => {
     router.get("/vnpay_return", function (req, res, next) {
         try {
             let vnp_Params = req.query;
+
             const secureHash = vnp_Params["vnp_SecureHash"];
-            // Sử dụng process.env
             const secretKey = process.env.VNP_HASH_SECRET;
 
             // Xóa các tham số không cần thiết
