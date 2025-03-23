@@ -4,7 +4,13 @@ var bodyParser = require("body-parser");
 var app = express();
 var cors = require("cors");
 
-app.use(cors());
+app.use(
+    cors({
+        origin: process.env.FRONTEND_URL, // URL của Frontend
+        methods: ["GET", "POST", "PATCH", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.get("/", (req, res) => {
@@ -12,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 require("./routes/login")(app);
+require("./routes/resetPassword")(app);
 require("./routes/user")(app);
 require("./routes/Tag")(app);
 require("./routes/Quocgia")(app);

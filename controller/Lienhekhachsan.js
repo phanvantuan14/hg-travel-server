@@ -1,29 +1,21 @@
-var Lienhekhachsan = require('../models').Lienhekhachsan;
-var Hotel = require('../models').Hotel;
-const { sendEmail } = require('./SendEmail');
+var Lienhekhachsan = require("../models").Lienhekhachsan;
+var Hotel = require("../models").Hotel;
+const { sendEmail } = require("./SendEmail");
 
 exports.create = async (req, res) => {
     try {
-        // Log để debug
-        console.log("Processing contact request for hotel ID:", req.body.hotelId);
-
         // Lấy thông tin khách sạn trước
         const hotel = await Hotel.findByPk(req.body.hotelId);
-        
+
         if (!hotel) {
-            throw new Error('Không tìm thấy thông tin khách sạn');
+            throw new Error("Không tìm thấy thông tin khách sạn");
         }
 
         if (!hotel.email) {
-            throw new Error(`Khách sạn ${hotel.name} chưa cập nhật email để nhận thông báo`);
+            throw new Error(
+                `Khách sạn ${hotel.name} chưa cập nhật email để nhận thông báo`
+            );
         }
-
-        console.log("Found hotel:", {
-            id: hotel.id,
-            name: hotel.name,
-            email: hotel.email
-        });
-
         // Tạo liên hệ mới
         const contactData = await Lienhekhachsan.create(req.body);
 
@@ -37,7 +29,9 @@ exports.create = async (req, res) => {
                 <p><strong>Email khách hàng:</strong> ${contactData.email}</p>
                 <p><strong>Địa chỉ:</strong> ${contactData.address}</p>
                 <p><strong>Nội dung yêu cầu:</strong> ${contactData.message}</p>
-                <p><strong>Thời gian gửi:</strong> ${new Date().toLocaleString('vi-VN')}</p>
+                <p><strong>Thời gian gửi:</strong> ${new Date().toLocaleString(
+                    "vi-VN"
+                )}</p>
             </div>
             <p>Vui lòng đăng nhập vào hệ thống để xử lý yêu cầu này.</p>
             <p>Trân trọng,</p>
@@ -51,20 +45,19 @@ exports.create = async (req, res) => {
             htmlContent
         );
 
-        res.json({ 
+        res.json({
             success: true,
             data: contactData,
             emailSent: emailResult.success,
-            message: emailResult.success 
-                ? `Đã gửi thông báo đến email của khách sạn: ${hotel.email}` 
-                : "Đã lưu yêu cầu liên hệ nhưng không gửi được email thông báo"
+            message: emailResult.success
+                ? `Đã gửi thông báo đến email của khách sạn: ${hotel.email}`
+                : "Đã lưu yêu cầu liên hệ nhưng không gửi được email thông báo",
         });
-
     } catch (err) {
         console.error("Error processing contact:", err);
         res.status(500).json({
             success: false,
-            error: err.message
+            error: err.message,
         });
     }
 };
@@ -72,17 +65,19 @@ exports.create = async (req, res) => {
 exports.findall = (req, res) => {
     Lienhekhachsan.findAll({
         order: [["id", "DESC"]],
-        include: [{ 
-            model: Hotel,
-            attributes: ["id", "name"] 
-        }]
+        include: [
+            {
+                model: Hotel,
+                attributes: ["id", "name"],
+            },
+        ],
     })
-        .then(data => {
+        .then((data) => {
             res.json({ data: data });
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).json({
-                error: err.message
+                error: err.message,
             });
         });
 };
@@ -94,50 +89,52 @@ exports.updateStatus = (req, res) => {
 
     Lienhekhachsan.update(
         { status: status },
-        { 
+        {
             where: { id: id },
-            returning: true // Để trả về data sau khi update
+            returning: true, // Để trả về data sau khi update
         }
     )
-    .then(async () => {
-        // Lấy data mới sau khi update
-        const updatedData = await Lienhekhachsan.findOne({
-            where: { id: id },
-            include: [{ 
-                model: Hotel,
-                attributes: ["id", "name"] 
-            }]
+        .then(async () => {
+            // Lấy data mới sau khi update
+            const updatedData = await Lienhekhachsan.findOne({
+                where: { id: id },
+                include: [
+                    {
+                        model: Hotel,
+                        attributes: ["id", "name"],
+                    },
+                ],
+            });
+            res.json({
+                success: true,
+                data: updatedData,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                error: err.message,
+            });
         });
-        res.json({ 
-            success: true,
-            data: updatedData 
-        });
-    })
-    .catch(err => {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-    });
 };
 
 // Thêm hàm delete
 exports.delete = (req, res) => {
     const id = req.params.id;
-    
+
     Lienhekhachsan.destroy({
-        where: { id: id }
+        where: { id: id },
     })
-    .then(() => {
-        res.json({ 
-            success: true,
-            message: "Đã xóa thành công!"
+        .then(() => {
+            res.json({
+                success: true,
+                message: "Đã xóa thành công!",
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                error: err.message,
+            });
         });
-    })
-    .catch(err => {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-    });
 };
