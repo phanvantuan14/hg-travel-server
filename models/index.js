@@ -18,7 +18,7 @@ if (config.use_env_variable) {
         config.password,
         {
             ...config,
-            logging: false, // Tắt log
+            logging: false,
         }
     );
 }

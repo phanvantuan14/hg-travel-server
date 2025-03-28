@@ -6,7 +6,7 @@ var cors = require("cors");
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL, // URL của Frontend
+        origin: process.env.FRONTEND_URL,
         methods: ["GET", "POST", "PATCH", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
     })
@@ -56,6 +56,7 @@ require("./routes/Lienhekhachsan")(app);
 app.use(function (err, req, res, next) {
     res.status(500).send(err);
 });
+
 app.listen(process.env.PORT || 666, () => {
     console.log("Backend is running.....");
 });
