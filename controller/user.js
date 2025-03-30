@@ -1,6 +1,7 @@
-var User = require("../models").User;
-var Role = require("../models").Role;
-var UserRole = require("../models").UserRole;
+const User = require("../models").User;
+const Role = require("../models").Role;
+const UserRole = require("../models").UserRole;
+const bcrypt = require("bcrypt");
 
 exports.create = async (req, res) => {
     try {
@@ -13,8 +14,13 @@ exports.create = async (req, res) => {
             });
         }
 
+        // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
         const userData = {
             ...req.body,
+            password: hashedPassword,
             UserRoles: [
                 {
                     roleId: userRole.id,
@@ -25,6 +31,10 @@ exports.create = async (req, res) => {
         const newUser = await User.create(userData, {
             include: [UserRole],
         });
+
+        // Remove password from response
+        const userResponse = newUser.toJSON();
+        delete userResponse.password;
 
         res.json({
             success: true,
@@ -37,6 +47,7 @@ exports.create = async (req, res) => {
         });
     }
 };
+
 exports.findall = (req, res) => {
     User.findAll({
         attributes: [
@@ -63,6 +74,7 @@ exports.findall = (req, res) => {
             });
         });
 };
+
 exports.findone = (req, res) => {
     User.findOne({ where: { id: req.params.id }, include: [Role] })
         .then((data) => {
@@ -80,6 +92,7 @@ exports.findone = (req, res) => {
             });
         });
 };
+
 exports.delete = (req, res) => {
     User.destroy({ where: { id: req.params.id } })
         .then((num) => {
@@ -98,6 +111,7 @@ exports.delete = (req, res) => {
             });
         });
 };
+
 exports.update = (req, res) => {
     User.update(req.body, { where: { id: req.params.id } })
         .then((data) => {
@@ -107,6 +121,7 @@ exports.update = (req, res) => {
             throw er;
         });
 };
+
 exports.checkemail = (req, res) => {
     User.findOne({ where: { email: req.params.email } })
         .then((data) => {
